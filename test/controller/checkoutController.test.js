@@ -10,11 +10,10 @@ const checkoutService = require('../../src/services/checkoutService');
 const { error } = require('console');
 
 describe('Checkout Controller', () => {
-before(async () => {
-    // Importa chai dinamicamente para suportar ESM
-    const chai = await import('chai');
-    expect = chai.expect;
-});
+    before(async () => {
+        const chai = await import('chai');
+        expect = chai.expect;
+    });
     describe('POST /api/checkout', () => {
         beforeEach(async () => {
             const respostaLogin = await request(app)
@@ -27,7 +26,7 @@ before(async () => {
             token = respostaLogin.body.token
         })
 
-         it('Checkout com sucesso, recebo 200', async () => {
+        it('Checkout com sucesso, recebo 200', async () => {
             const checkoutMock = sinon.stub(checkoutService, 'checkout')
             checkoutMock.returns({
                 userId: 1,
