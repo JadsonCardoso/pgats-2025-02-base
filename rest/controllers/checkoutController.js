@@ -1,7 +1,7 @@
-const checkoutService = require('../../src/services/checkoutService');
-const userService = require('../../src/services/userService');
+import checkoutService from '../../src/services/checkoutService.js';
+import userService from '../../src/services/userService.js';
 
-exports.checkout = (req, res) => {
+const checkout = (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
   const userData = userService.verifyToken(token);
   if (!userData) return res.status(401).json({ error: 'Token inválido' });
@@ -13,4 +13,8 @@ exports.checkout = (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
+};
+
+export default {
+  checkout
 };

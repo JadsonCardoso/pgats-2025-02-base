@@ -1,3 +1,13 @@
+# Atenção: ES Modules
+
+Este projeto utiliza ES Modules (ECMAScript Modules). Isso significa:
+
+- O campo `"type": "module"` está definido no `package.json`.
+- Todos os arquivos de código-fonte usam `import`/`export` ao invés de `require`/`module.exports`.
+- Ao importar arquivos locais, sempre utilize a extensão `.js` (exemplo: `import app from './app.js'`).
+- Não utilize `require` ou `module.exports` em nenhum arquivo.
+
+Se for adicionar novos arquivos, siga esse padrão para evitar erros de importação.
 # API Checkout Rest e GraphQL
 
 Se você é aluno da Pós-Graduação em Automação de Testes de Software (Turma 2), faça um fork desse repositório e boa sorte em seu trabalho de conclusão da disciplina.

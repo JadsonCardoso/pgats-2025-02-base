@@ -9,16 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/juliodelimas/pgats-2025-02-base.git"
+    "url": "git+https://github.com/JadsonCardoso/pgats-2025-02-base.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
-    "url": "https://github.com/juliodelimas/pgats-2025-02-base/issues"
+    "url": "https://github.com/JadsonCardoso/pgats-2025-02-base.git"
   },
-  "homepage": "https://github.com/juliodelimas/pgats-2025-02-base#readme",
+  "homepage": "https://github.com/JadsonCardoso/pgats-2025-02-base.git#readme",
   "dependencies": {
     "apollo-server-express": "^3.13.0",
     "chai": "^6.0.1",

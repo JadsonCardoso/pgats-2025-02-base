@@ -1,4 +1,4 @@
-module.exports = {
+const swaggerDocument = {
   openapi: '3.0.0',
   info: {
     title: 'API Checkout Demo',
@@ -112,3 +112,5 @@ module.exports = {
     }
   }
 };
+
+export default swaggerDocument;
