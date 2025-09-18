@@ -1,3 +1,12 @@
+# Bibliotecas de Teste Utilizadas
+
+Este projeto utiliza as seguintes bibliotecas para testes automatizados:
+
+- **Mocha**: Framework de testes JavaScript para execução dos testes.
+- **Chai**: Biblioteca de asserções para facilitar a escrita dos testes.
+- **Sinon**: Utilitário para mocks, spies e stubs em testes.
+- **SuperTest**: Permite testar endpoints HTTP de APIs Express de forma simples e eficiente.
+
 # Atenção: ES Modules
 
 Este projeto utiliza ES Modules (ECMAScript Modules). Isso significa:
