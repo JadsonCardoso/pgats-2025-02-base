@@ -1,6 +1,7 @@
 const request = require('supertest');
 const sinon = require('sinon');
-const { expect } = require('chai');
+
+let expect;
 
 const app = require('../../rest/app');
 const { equal } = require('assert')
@@ -9,6 +10,11 @@ const checkoutService = require('../../src/services/checkoutService');
 const { error } = require('console');
 
 describe('Checkout Controller', () => {
+before(async () => {
+    // Importa chai dinamicamente para suportar ESM
+    const chai = await import('chai');
+    expect = chai.expect;
+});
     describe('POST /api/checkout', () => {
         beforeEach(async () => {
             const respostaLogin = await request(app)
