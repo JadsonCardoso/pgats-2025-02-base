@@ -4,9 +4,9 @@ import sinon from 'sinon';
 import * as chai from 'chai';
 const { expect } = chai;
 
-import app from '../../rest/app.js';
+import app from '../../../rest/app.js';
 import { equal } from 'assert';
-import checkoutService from '../../src/services/checkoutService.js';
+import checkoutService from '../../../src/services/checkoutService.js';
 import { error } from 'console';
 
 describe('Checkout Controller', () => {
