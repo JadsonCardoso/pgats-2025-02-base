@@ -1,15 +1,17 @@
-const request = require('supertest');
-const sinon = require('sinon');
-const { expect } = require('chai');
 
-const app = require('../../rest/app');
-const { equal } = require('assert')
+import request from 'supertest';
+import sinon from 'sinon';
+import * as chai from 'chai';
+const { expect } = chai;
 
-const checkoutService = require('../../src/services/checkoutService');
-const { error } = require('console');
+import app from '../../rest/app.js';
+import { equal } from 'assert';
+import checkoutService from '../../src/services/checkoutService.js';
+import { error } from 'console';
 
 describe('Checkout Controller', () => {
     describe('POST /api/checkout', () => {
+        let token;
         beforeEach(async () => {
             const respostaLogin = await request(app)
                 .post('/api/users/login')
@@ -18,7 +20,7 @@ describe('Checkout Controller', () => {
                     password: "123456"
                 })
 
-            token = respostaLogin.body.token
+            token = respostaLogin.body.token;
         })
 
          it('Checkout com sucesso, recebo 200', async () => {
