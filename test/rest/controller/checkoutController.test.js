@@ -1,3 +1,4 @@
+import { readFile } from 'fs/promises';
 
 import request from 'supertest';
 import sinon from 'sinon';
@@ -13,26 +14,97 @@ describe('Checkout Controller', () => {
     describe('POST /api/checkout', () => {
         let token;
         beforeEach(async () => {
+            const postLogin = JSON.parse(
+                await readFile(
+                    new URL('../fixture/requisicoes/login/postLogin.json', import.meta.url)
+                )
+            );
             const respostaLogin = await request(app)
                 .post('/api/users/login')
-                .send({
-                    email: "alice@email.com",
-                    password: "123456"
-                })
+                .send(postLogin)
 
             token = respostaLogin.body.token;
         })
 
-         it('Checkout com sucesso, recebo 200', async () => {
+        it('Quando envio dados válidos no checkout com pagamento via cartão de crédito, recebo uma resposta 200', async () => {
+            const postChekoutSucesso = JSON.parse(
+                await readFile(
+                    new URL('../fixture/requisicoes/checkout/postChekoutSucesso.json', import.meta.url)
+                )
+            );
             const checkoutMock = sinon.stub(checkoutService, 'checkout')
             checkoutMock.returns({
                 userId: 1,
-                items: 2,
+                items: [
+                    {
+                        "productId": 1,
+                        "quantity": 2
+                    }
+                ],
                 freight: 0,
                 paymentMethod: "credit_card",
                 total: 190
 
             })
+
+            const resposta = await request(app)
+                .post('/api/checkout')
+                .set('Authorization', `Bearer ${token}`)
+                .send(postChekoutSucesso);
+
+            const respostaEsperada = JSON.parse(
+                await readFile(
+                    new URL('../fixture/respostas/checkout/quandoEnvioDadosValidosNoCheckoutReceboUmaResposta200.json', import.meta.url)
+                )
+            );
+
+            expect(resposta.body).to.deep.equal(respostaEsperada)
+            expect(resposta.status).to.equal(200);
+
+        })
+
+        it('Quando envio dados válidos no checkout com pagamento via boleto, recebo uma resposta 200', async () => {
+            const postChekoutSucesso = JSON.parse(
+                await readFile(
+                    new URL('../fixture/requisicoes/checkout/postChekoutSucesso.json', import.meta.url)
+                )
+            );
+            const checkoutMock = sinon.stub(checkoutService, 'checkout')
+            checkoutMock.returns({
+                userId: 1,
+                items: [
+                    {
+                        "productId": 1,
+                        "quantity": 2
+                    }
+                ],
+                freight: 0,
+                paymentMethod: "boleto",
+                total: 190
+
+            })
+
+            const resposta = await request(app)
+                .post('/api/checkout')
+                .set('Authorization', `Bearer ${token}`)
+                .send(postChekoutSucesso);
+
+            const respostaEsperada = JSON.parse(
+                await readFile(
+                    new URL('../fixture/respostas/checkout/quandoEnvioDadosValidosNoCheckoutReceboUmaResposta200.json', import.meta.url)
+                )
+            );
+
+            respostaEsperada.paymentMethod = "boleto"
+            expect(resposta.body).to.deep.equal(respostaEsperada)
+            expect(resposta.status).to.equal(200);
+
+        })
+
+
+        it('Checkout sem preencher os dados do cartão, recebo 400', async () => {
+            const checkoutMock = sinon.stub(checkoutService, 'checkout')
+            checkoutMock.throws(new Error('Dados do cartão obrigatórios para pagamento com cartão'))
 
             const resposta = await request(app)
                 .post('/api/checkout')
@@ -46,24 +118,11 @@ describe('Checkout Controller', () => {
                     ],
                     freight: 0,
                     paymentMethod: "credit_card",
-                    cardData: {
-                        number: "string",
-                        name: "string",
-                        expiry: "string",
-                        cvv: "string"
-                    }
                 });
 
-            expect(resposta.status).to.equal(200);
-            expect(resposta.body).to.have.property('userId', 1)
-            expect(resposta.body).to.have.property('items', 2)
-            expect(resposta.body).to.have.property('freight', 0)
-            expect(resposta.body).to.have.property('paymentMethod', 'credit_card')
-            expect(resposta.body).to.have.property('total', 190)
-
-            sinon.restore();
-        })
-
+            expect(resposta.status).to.equal(400);
+            expect(resposta.body).to.have.property('error', 'Dados do cartão obrigatórios para pagamento com cartão')
+        });
 
         it('Checkout com produto não cadastrado, recebo 400', async () => {
             const calculateTotalMock = sinon.stub(checkoutService, 'calculateTotal')
@@ -90,10 +149,12 @@ describe('Checkout Controller', () => {
                 });
 
             expect(resposta.status).to.equal(400);
-            expect(resposta.body).to.have.property('error', 'Produto não encontrado')
+            expect(resposta.body).to.have.property('error', 'Produto não encontrado');
+        });
 
+        afterEach(() => {
             sinon.restore();
-        })
+        });
+    });
 
-    })
-})
+});
