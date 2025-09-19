@@ -140,19 +140,13 @@ describe('Checkout Controller', () => {
                     ],
                     freight: 0,
                     paymentMethod: "boleto",
-                    cardData: {
-                        number: "string",
-                        name: "string",
-                        expiry: "string",
-                        cvv: "string"
-                    }
                 });
 
             expect(resposta.status).to.equal(400);
             expect(resposta.body).to.have.property('error', 'Produto não encontrado');
         });
 
-        afterEach(() => {
+        afterEach( async() => {
             sinon.restore();
         });
     });
