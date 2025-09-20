@@ -1,7 +1,8 @@
-import express from 'express';
-import checkoutController from '../controllers/checkoutController.js';
+
+const express = require('express');
+const checkoutController = require('../controllers/checkoutController');
 
 const router = express.Router();
 router.post('/', checkoutController.checkout);
 
-export default router;
+module.exports = router;

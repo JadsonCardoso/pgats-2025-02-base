@@ -1,27 +1,18 @@
-import { readFile } from 'fs/promises';
 
-// Carrega o JSON de erro de negócio no topo do arquivo (Node.js ES Modules com top-level await)
-const testesDeErroDeNegocio = JSON.parse(
-    await readFile(
-        new URL('../fixture/requisicoes/checkout/postChekoutWithError.json', import.meta.url)
-    )
-);
-import request from 'supertest';
-import * as chai from 'chai';
-import dotenv from 'dotenv';
+const fs = require('fs');
+const path = require('path');
+const request = require('supertest');
+const chai = require('chai');
+const dotenv = require('dotenv');
 dotenv.config();
 const { expect } = chai;
+const testesDeErroDeNegocio = require(path.join(__dirname, '../fixture/requisicoes/checkout/postChekoutWithError.json'));
 
 describe('Checkout External', () => {
     describe('POST /api/checkout', () => {
         let token;
         beforeEach(async () => {
-
-            const postLogin = JSON.parse(
-                await readFile(
-                    new URL('../fixture/requisicoes/login/postLogin.json', import.meta.url)
-                )
-            );
+            const postLogin = require(path.join(__dirname, '../fixture/requisicoes/login/postLogin.json'));
             const respostaLogin = await request(process.env.BASE_URL_REST)
                 .post('/api/users/login')
                 .send(postLogin)
@@ -31,21 +22,13 @@ describe('Checkout External', () => {
 
 
         it('Quando envio dados válidos no checkout com pagmento via cartão de crédito, recebo uma resposta 200', async () => {
-            const postChekoutSucesso = JSON.parse(
-                await readFile(
-                    new URL('../fixture/requisicoes/checkout/postChekoutSucesso.json', import.meta.url)
-                )
-            );
+            const postChekoutSucesso = require(path.join(__dirname, '../fixture/requisicoes/checkout/postChekoutSucesso.json'));
             const resposta = await request(process.env.BASE_URL_REST)
                 .post('/api/checkout')
                 .set('Authorization', `Bearer ${token}`)
                 .send(postChekoutSucesso);
 
-            const respostaEsperada = JSON.parse(
-                await readFile(
-                    new URL('../fixture/respostas/checkout/quandoEnvioDadosValidosNoCheckoutReceboUmaResposta200.json', import.meta.url)
-                )
-            );
+            const respostaEsperada = require(path.join(__dirname, '../fixture/respostas/checkout/quandoEnvioDadosValidosNoCheckoutReceboUmaResposta200.json'));
 
             expect(resposta.body).to.deep.equal(respostaEsperada)
             expect(resposta.status).to.equal(200);

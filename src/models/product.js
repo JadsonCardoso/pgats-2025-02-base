@@ -3,4 +3,4 @@ const products = [
   { id: 2, name: 'Produto B', price: 200 }
 ];
 
-export default products;
+module.exports = products;

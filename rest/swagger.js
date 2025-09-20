@@ -113,4 +113,4 @@ const swaggerDocument = {
   }
 };
 
-export default swaggerDocument;
+module.exports = swaggerDocument;
