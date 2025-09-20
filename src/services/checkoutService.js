@@ -1,6 +1,5 @@
-
-import products from '../models/product.js';
-import users from '../models/user.js';
+const products = require('../models/product');
+const users = require('../models/user');
 
 function calculateTotal(items, freight, paymentMethod) {
   let total = 0;
@@ -26,7 +25,7 @@ function checkout(userId, items, freight, paymentMethod, cardData) {
 }
 
 
-export default {
+module.exports = {
   calculateTotal,
   checkout
 };

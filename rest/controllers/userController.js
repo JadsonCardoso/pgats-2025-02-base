@@ -1,4 +1,5 @@
-import userService from '../../src/services/userService.js';
+
+const userService = require('../../src/services/userService');
 
 const register = (req, res) => {
   const { name, email, password } = req.body;
@@ -14,7 +15,7 @@ const login = (req, res) => {
   res.json(result);
 };
 
-export default {
+module.exports = {
   register,
   login
 };

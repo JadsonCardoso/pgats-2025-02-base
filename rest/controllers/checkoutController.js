@@ -1,5 +1,6 @@
-import checkoutService from '../../src/services/checkoutService.js';
-import userService from '../../src/services/userService.js';
+
+const checkoutService = require('../../src/services/checkoutService');
+const userService = require('../../src/services/userService');
 
 const checkout = (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
@@ -15,6 +16,6 @@ const checkout = (req, res) => {
   }
 };
 
-export default {
+module.exports = {
   checkout
 };
