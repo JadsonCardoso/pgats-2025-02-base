@@ -1,50 +1,42 @@
 
-const fs = require('fs');
-const path = require('path');
 const request = require('supertest');
-const chai = require('chai');
-const dotenv = require('dotenv');
-dotenv.config();
-const { expect } = chai;
-const testesDeErroDeNegocio = require(path.join(__dirname, '../fixture/requisicoes/checkout/postChekoutWithError.json'));
+const { expect } = require('chai');
+require('dotenv').config();
 
 describe('Checkout External', () => {
     describe('POST /api/checkout', () => {
-        let token;
-        beforeEach(async () => {
-            const postLogin = require(path.join(__dirname, '../fixture/requisicoes/login/postLogin.json'));
+        before(async function () {
+            const postLogin = require('../fixture/requisicoes/login/postLogin.json');
             const respostaLogin = await request(process.env.BASE_URL_REST)
                 .post('/api/users/login')
-                .send(postLogin)
+                .send(postLogin);
+            this.token = respostaLogin.body.token;
+        });
 
-            token = respostaLogin.body.token;
-        })
+        beforeEach(async () => {
+            postChekoutSucesso = require('../fixture/requisicoes/checkout/postChekoutSucesso.json');
+        });
 
-
-        it('Quando envio dados válidos no checkout com pagmento via cartão de crédito, recebo uma resposta 200', async () => {
-            const postChekoutSucesso = require(path.join(__dirname, '../fixture/requisicoes/checkout/postChekoutSucesso.json'));
+        it('Quando envio dados válidos no checkout com pagamento via cartão de crédito, recebo uma resposta 200', async function () {
+            const respostaEsperada = require('../fixture/respostas/checkout/quandoEnvioDadosValidosNoCheckoutReceboUmaResposta200.json');
             const resposta = await request(process.env.BASE_URL_REST)
                 .post('/api/checkout')
-                .set('Authorization', `Bearer ${token}`)
+                .set('Authorization', `Bearer ${this.token}`)
                 .send(postChekoutSucesso);
-
-            const respostaEsperada = require(path.join(__dirname, '../fixture/respostas/checkout/quandoEnvioDadosValidosNoCheckoutReceboUmaResposta200.json'));
-
-            expect(resposta.body).to.deep.equal(respostaEsperada)
+            expect(resposta.body).to.deep.equal(respostaEsperada);
             expect(resposta.status).to.equal(200);
-        })
+        });
 
+        const testesDeErroDeNegocio = require('../fixture/requisicoes/checkout/postChekoutWithError.json');
         testesDeErroDeNegocio.forEach(teste => {
             it(`Testando a regra relacionada a ${teste.nomeDoTeste}`, async function () {
                 const resposta = await request(process.env.BASE_URL_REST)
                     .post('/api/checkout')
-                    .set('Authorization', `Bearer ${token}`)
+                    .set('Authorization', `Bearer ${this.token}`)
                     .send(teste.postCheckout);
-
                 expect(resposta.status).to.equal(400);
                 expect(resposta.body).to.have.property('error', teste.mensagemEsperada);
             });
         });
-
-    })
-})
+    });
+});
