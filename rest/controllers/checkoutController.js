@@ -1,8 +1,7 @@
-
 const checkoutService = require('../../src/services/checkoutService');
 const userService = require('../../src/services/userService');
 
-const checkout = (req, res) => {
+exports.checkout = (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
   const userData = userService.verifyToken(token);
   if (!userData) return res.status(401).json({ error: 'Token inválido' });
@@ -14,8 +13,4 @@ const checkout = (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-};
-
-module.exports = {
-  checkout
 };

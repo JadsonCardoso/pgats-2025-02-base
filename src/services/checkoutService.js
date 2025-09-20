@@ -24,8 +24,4 @@ function checkout(userId, items, freight, paymentMethod, cardData) {
   return { userId, items, freight, paymentMethod, total };
 }
 
-
-module.exports = {
-  calculateTotal,
-  checkout
-};
+module.exports = { calculateTotal, checkout };

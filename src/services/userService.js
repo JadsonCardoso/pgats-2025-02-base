@@ -30,10 +30,4 @@ function verifyToken(token) {
   }
 }
 
-
-module.exports = {
-  findUserByEmail,
-  registerUser,
-  authenticate,
-  verifyToken
-};
+module.exports = { findUserByEmail, registerUser, authenticate, verifyToken };
